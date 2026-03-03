@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Akun Guru - Sistem Ujian Online</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="login-page">
+
+    <div class="login-container">
+        <div class="login-box">
+            <h2>Daftar Akun Guru</h2>
+
+            <!-- FORM REGISTER -->
+            <form id="registerForm">
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <input type="password" placeholder="Konfirmasi Password" required>
+                <button type="submit" class="btn-primary">Daftar</button>
+            </form>
+
+            <!-- LINK LOGIN -->
+            <p class="register-text">
+                Sudah punya akun? <a href="index.html">Login di sini</a>
+            </p>
+
+        </div>
+    </div>
+
+    <!-- FIREBASE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        // ================== FIREBASE CONFIG ==================
+        const firebaseConfig = {
+            apiKey: "AIzaSyCDfLoILU2tnNJYYq6lKi5kDthx8-_dQJY",
+            authDomain: "sistem-ujian-online-b07d8.firebaseapp.com",
+            projectId: "sistem-ujian-online-b07d8",
+            storageBucket: "sistem-ujian-online-b07d8.firebasestorage.app",
+            messagingSenderId: "94980257503",
+            appId: "1:94980257503:web:9b53977aff4315ab371b6a"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const form = document.getElementById("registerForm");
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const email = form.querySelector("input[type='email']").value;
+            const password = form.querySelectorAll("input[type='password']")[0].value;
+            const confirmPassword = form.querySelectorAll("input[type='password']")[1].value;
+
+            if(password !== confirmPassword){
+                alert("Password dan konfirmasi password tidak sama!");
+                return;
+            }
+
+            createUserWithEmailAndPassword(auth, email, password)
+                .then(() => {
+                    alert("Akun berhasil dibuat! Silakan login.");
+                    window.location.href = "index.html"; // redirect ke login
+                })
+                .catch((error) => {
+                    alert("Gagal daftar: " + error.message);
+                });
+        });
+    </script>
+
+</body>
+</html>
