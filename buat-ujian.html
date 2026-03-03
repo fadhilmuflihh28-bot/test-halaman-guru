@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buat Ujian</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+        <h3>Guru Panel</h3>
+
+        <nav>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="buat-ujian.html" class="active">Buat Ujian</a>
+            <a href="daftar-ujian.html">Daftar Ujian</a>
+            <a href="monitoring.html">Monitoring Siswa</a>
+            <a href="index.html">Logout</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+
+        <h2>Buat Ujian Baru</h2>
+
+        <form class="form-card">
+            <input 
+                type="text"
+                placeholder="Judul Ujian"
+                required
+            >
+
+            <input 
+                type="number"
+                placeholder="Durasi (menit)"
+                required
+            >
+
+            <button type="submit" class="btn-primary">
+                Buat Ujian
+            </button>
+        </form>
+
+    </main>
+
+</div>
+
+</body>
+</html>
