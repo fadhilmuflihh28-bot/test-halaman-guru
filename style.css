@@ -166,6 +166,7 @@ body {
     flex-direction: column;
     gap: 10px;
     max-width: 500px;
+    margin-bottom: 20px;
 }
 
 .form-card input,
@@ -174,6 +175,21 @@ body {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
+}
+
+/* ================= QUESTION LIST / PREVIEW ================= */
+.question-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.question-card {
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f1f5ff;
+    border-left: 4px solid #007bff;
 }
 
 /* ================= TABLE ================= */
