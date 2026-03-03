@@ -8,12 +8,10 @@
 </head>
 
 <body>
-
 <div class="layout">
 
     <aside class="sidebar">
         <h3>Guru Panel</h3>
-
         <nav>
             <a href="dashboard.html">Dashboard</a>
             <a href="buat-ujian.html">Buat Ujian</a>
@@ -27,11 +25,8 @@
 
         <h2>Input Soal</h2>
 
-        <form class="form-card">
-            <textarea 
-                placeholder="Tulis pertanyaan di sini..."
-                required
-            ></textarea>
+        <form class="form-card" id="questionForm">
+            <textarea placeholder="Tulis pertanyaan di sini..." required></textarea>
 
             <input type="text" placeholder="Opsi A" required>
             <input type="text" placeholder="Opsi B" required>
@@ -48,25 +43,97 @@
                 <option value="E">E</option>
             </select>
 
-            <button type="button" class="btn-secondary">
-                Tambah Soal
-            </button>
+            <button type="submit" class="btn-secondary">Tambah Soal</button>
         </form>
 
-        <div class="question-list">
-            <div class="card question-card">
-                <p><strong>1.</strong> Contoh pertanyaan?</p>
-                <small>Jawaban benar: B</small>
-            </div>
-        </div>
+        <div class="question-list"></div>
 
-        <button class="btn-primary">
-            Simpan Ujian
-        </button>
+        <button id="saveExam" class="btn-primary">Simpan Ujian</button>
 
     </main>
 
 </div>
+
+<!-- Firebase & JS -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCDfLoILU2tnNJYYq6lKi5kDthx8-_dQJY",
+    authDomain: "sistem-ujian-online-b07d8.firebaseapp.com",
+    projectId: "sistem-ujian-online-b07d8",
+    storageBucket: "sistem-ujian-online-b07d8.firebasestorage.app",
+    messagingSenderId: "94980257503",
+    appId: "1:94980257503:web:9b53977aff4315ab371b6a"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let examQuestions = []; // Temp storage sebelum disimpan
+
+const form = document.getElementById("questionForm");
+const questionListDiv = document.querySelector(".question-list");
+const saveBtn = document.getElementById("saveExam");
+
+// Tambah soal ke preview & array
+form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const questionText = form.querySelector("textarea").value.trim();
+    const options = [
+        form.querySelector("input[placeholder='Opsi A']").value.trim(),
+        form.querySelector("input[placeholder='Opsi B']").value.trim(),
+        form.querySelector("input[placeholder='Opsi C']").value.trim(),
+        form.querySelector("input[placeholder='Opsi D']").value.trim(),
+        form.querySelector("input[placeholder='Opsi E']").value.trim()
+    ];
+    const correctAnswer = form.querySelector("select").value;
+
+    if(!questionText || !correctAnswer) {
+        alert("Pertanyaan dan jawaban benar wajib diisi!");
+        return;
+    }
+
+    const newQuestion = { question: questionText, options, correctAnswer };
+    examQuestions.push(newQuestion);
+
+    // Update preview
+    const card = document.createElement("div");
+    card.classList.add("card", "question-card");
+    card.innerHTML = `<p><strong>${examQuestions.length}. </strong>${questionText}</p>
+                      <small>Jawaban benar: ${correctAnswer}</small>`;
+    questionListDiv.appendChild(card);
+
+    // Reset form
+    form.reset();
+});
+
+// Simpan semua soal ke Firestore
+saveBtn.addEventListener("click", async () => {
+    if(examQuestions.length === 0) {
+        alert("Belum ada soal untuk disimpan!");
+        return;
+    }
+
+    try {
+        for(const q of examQuestions) {
+            await addDoc(collection(db, "soal"), {
+                question: q.question,
+                options: q.options,
+                correctAnswer: q.correctAnswer,
+                timestamp: new Date()
+            });
+        }
+        alert("Semua soal berhasil disimpan!");
+        examQuestions = [];
+        questionListDiv.innerHTML = "";
+    } catch(error) {
+        alert("Gagal menyimpan soal: " + error.message);
+    }
+});
+</script>
 
 </body>
 </html>
